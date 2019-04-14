@@ -2,9 +2,9 @@ from flask import Flask
 from flask import request
 from pathlib import Path
 from string import Template
+import boto3
 
 app = Flask(__name__)
-logs = 'logs.txt'
 
 '''
 Calls:
@@ -16,9 +16,8 @@ Calls:
 @app.route('/log')
 def log():
 
-    filename = Path(logs)
-    filename.touch(exist_ok=True)  # will create file, if it exists will do nothing
-    file = open(logs, 'a')
+    s3 = boto3.resource('s3')
+    obj = s3.Object('fitlogger', 'logs.txt')
 
     source = request.args.get('source') # source: read, calculated, granted
     activity = request.args.get('activity')
@@ -33,8 +32,7 @@ def log():
     info += "\n"
     info += '-------------------\n'
 
-    file.write(info)
-    file.close()
+    obj.put(Body=info)
 
     return 'OK'
 
