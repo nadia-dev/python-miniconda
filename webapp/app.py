@@ -17,8 +17,7 @@ Calls:
 def log():
 
     s3 = boto3.resource('s3')
-    obj = s3.Object('fitlogger', 'logs.txt')
-
+    
     source = request.args.get('source') # source: read, calculated, granted
     activity = request.args.get('activity')
     average = request.args.get('average')
@@ -26,6 +25,8 @@ def log():
     fuel = request.args.get('fuel')
     most_recent = request.args.get('mostRecentReading')
     date = request.args.get('date')
+
+    obj = s3.Object('fitlogger', date)
 
     template = Template("Source: $a, Activity: $b, Average: $c, Value: %d, Most Recent: %e, Fuel: %f, datetime: %g")
     info = template.safe_substitute(a=source, b=activity, c=average, d=value, e=most_recent, f=fuel, g=date)
