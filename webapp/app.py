@@ -3,6 +3,7 @@ from flask import request
 from pathlib import Path
 from string import Template
 import boto3
+import sys
 
 app = Flask(__name__)
 
@@ -35,6 +36,7 @@ def log():
 
     obj.put(Body=info)
     print(info)
+    sys.stdout.flush()
 
     return 'OK'
 
